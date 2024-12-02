@@ -40,6 +40,13 @@ def iterate_metrics():
             metrics.append(metric)
 
     print(metrics)
+    metrics_file_exists = os.path.isfile(csv_file)
+    with open(csv_file, 'a', newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=["instance", "timestamp", "metric_name", "value"])
+        if not metrics_file_exists:
+            writer.writeheader()
+        writer.writerows(metrics)
+    print("Metrics saved to", csv_file)
 
 
 
