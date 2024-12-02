@@ -17,8 +17,7 @@ This project demonstrates how to fetch system metrics using Prometheus, process 
 
 1. Clone the repository:
    ```
-   $ git clone https://github.com/yourusername/predict-cpu-usage.git
-   $ cd predict-cpu-usage
+   $ git clone https://github.com/franciscocunha55/mlOpsProjects.git
     ```
    
 2. Install the required Python packages:
@@ -40,5 +39,6 @@ This project demonstrates how to fetch system metrics using Prometheus, process 
 
 4. Run the Script
     ```
+    $ cd predict-cpu-usage
     $ python3 main.py
     ```
