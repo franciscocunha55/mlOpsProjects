@@ -1,6 +1,8 @@
 import csv
 import os.path
 from datetime import datetime, timezone
+from time import sleep
+
 import requests
 import json
 
@@ -51,4 +53,7 @@ def iterate_metrics():
 
 
 if __name__ == '__main__':
-    iterate_metrics()
+    for i in range(100):
+        print("iteration number ", i+1)
+        iterate_metrics()
+        sleep(60)
