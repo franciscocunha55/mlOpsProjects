@@ -1,29 +1,9 @@
 import asyncio
-import json
 import time
-from http.client import responses
-from typing import Any
-
 import httpx
-import requests
-
-
-async def fn():
-    task = asyncio.create_task((fn2()))
-    print("one")
-    print("four")
-    await asyncio.sleep(1)
-    print("five")
-    await asyncio.sleep(1)
-
-async def fn2():
-    print("two")
-    await asyncio.sleep(1)
-    print("three")
 
 
 async def async_request_httpx(url, request_id, client_id):
-
     print(f" Client {client_id + 1}, Request {request_id + 1}: Starting")
     async with httpx.AsyncClient() as client:
         response = await client.get(url)
@@ -46,8 +26,6 @@ async def async_run_multiple_requests(url, num_requests, clients):
 def check_success_rate(tuples_responses):
     success = 0
     for response in tuples_responses:
-        #print(response)
-        #print(response[0])
         if response[0] == 200:
              success += 1
     return success / len(tuples_responses) * 100
@@ -66,22 +44,28 @@ def check_max_latency(tuples_responses):
     return max_latency
 
 def check_min_latency(tuples_responses):
-    min_latency = 99999999
+    min_latency = 99999
     for response in tuples_responses:
         if response[1] < min_latency:
             min_latency = response[1]
     return min_latency
 
+
+# 95th percentile latency is a statistical measure used to capture the experience of the majority of users while ignore extreme cases (outliers)
+# 95% of the values in the list are less than or equal to this value
+def calculate_percentile_95(tuples_response):
+    sorted_latencies = sorted(tuples_response)
+    index_95th = int(len(sorted_latencies) * 0.95) - 1   # -1: Adjusts the index for zero-based indexing.
+    latency_95th = sorted_latencies[index_95th]
+    return latency_95th[1]
+
 if __name__ == '__main__':
-    #request_url("http://httpbin.org/headers")
-    #asyncio.run(main())
-    # request_httpx("https://www.example.org/")
-    # asyncio.run(async_request_httpx("https://www.example.org/"))
     start_time = time.time()
-    tuples_responses = asyncio.run(async_run_multiple_requests("https://www.example.org", 5, 3))
+    tuples_responses = asyncio.run(async_run_multiple_requests("https://www.example.org", 5, 4))
     end_time = time.time()
     print(f"Execution time: {end_time - start_time:.2f} seconds")
-    print(f"Success Rate: {check_success_rate(tuples_responses):.2f} ")
+    print(f"Success Rate: {check_success_rate(tuples_responses):.2f} %")
     print(f"Average Latency: {check_average_latency(tuples_responses):.2f} seconds")
     print(f"Maximum latency: {check_max_latency(tuples_responses):.2f} seconds")
     print(f"Minimum latency: {check_min_latency(tuples_responses):.2f} seconds")
+    print(f"95th Percentile latency: {calculate_percentile_95(tuples_responses):.2f} seconds")
