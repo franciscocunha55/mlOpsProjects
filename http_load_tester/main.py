@@ -58,6 +58,19 @@ def check_average_latency(tuples_responses):
         total_latency += response[1]
     return total_latency / len(tuples_responses)
 
+def check_max_latency(tuples_responses):
+    max_latency = 0
+    for response in tuples_responses:
+        if response[1] > max_latency:
+            max_latency = response[1]
+    return max_latency
+
+def check_min_latency(tuples_responses):
+    min_latency = 99999999
+    for response in tuples_responses:
+        if response[1] < min_latency:
+            min_latency = response[1]
+    return min_latency
 
 if __name__ == '__main__':
     #request_url("http://httpbin.org/headers")
@@ -69,4 +82,6 @@ if __name__ == '__main__':
     end_time = time.time()
     print(f"Execution time: {end_time - start_time:.2f} seconds")
     print(f"Success Rate: {check_success_rate(tuples_responses):.2f} ")
-    #print(f"Average Latency: {check_average_latency(tuples_responses)}")
+    print(f"Average Latency: {check_average_latency(tuples_responses):.2f} seconds")
+    print(f"Maximum latency: {check_max_latency(tuples_responses):.2f} seconds")
+    print(f"Minimum latency: {check_min_latency(tuples_responses):.2f} seconds")
